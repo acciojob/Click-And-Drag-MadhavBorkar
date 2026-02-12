@@ -6,20 +6,27 @@ let startX = 0;
 let startScrollLeft = 0;
 
 slider.addEventListener('mousedown', (e) => {
+  if (e.which !== 1) return; // left click only
   isDown = true;
   slider.classList.add('active');
-  startX = e.clientX;
+
+  startX = e.pageX;
   startScrollLeft = slider.scrollLeft;
 });
 
-document.addEventListener('mouseup', () => {
+slider.addEventListener('mousemove', (e) => {
+  if (!isDown) return;
+
+  const delta = e.pageX - startX;
+  slider.scrollLeft = startScrollLeft - delta;
+});
+
+slider.addEventListener('mouseup', () => {
   isDown = false;
   slider.classList.remove('active');
 });
 
-document.addEventListener('mousemove', (e) => {
-  if (!isDown) return;
-
-  const deltaX = e.clientX - startX;
-  slider.scrollLeft = startScrollLeft - deltaX;
+slider.addEventListener('mouseleave', () => {
+  isDown = false;
+  slider.classList.remove('active');
 });
